@@ -35,6 +35,8 @@ class InternalUser extends CActiveRecord {
     public $confirm_new_password;
     public $YesNo = array('Yes', 'No');
     public $EnabledDisabled = array('Enabled', 'Disabled');
+    public $requestedNewPassword = 0;
+    public $oldPasswordHash;
 
     public static function passwordHash($password) {
         return md5(VIREX_PASSWORD_SALT . $password);
@@ -57,6 +59,7 @@ class InternalUser extends CActiveRecord {
             array('fname_uin, lname_uin, email_uin', 'required'),
             array('fname_uin, lname_uin, email_uin', 'length', 'max' => 50),
             array('enabled_uin, notification_pgp_error_uin, notification_undetected_samples_uin, notification_new_account_request_uin', 'length', 'max' => 1),
+            array('new_password', 'length', 'min' => 5, 'on' => 'update'),
             array('new_password, confirm_new_password, old_password', 'safe', 'on' => 'update'),
             array('confirm_new_password', 'compare', 'compareAttribute' => 'new_password', 'on' => 'update'),
             array('email_uin', 'email', 'on' => 'register'),
@@ -73,12 +76,25 @@ class InternalUser extends CActiveRecord {
             $this->new_password = substr(md5(uniqid(rand(), true)), 0, 8);
             $this->password_uin = self::passwordHash($this->new_password);
             $this->register_date_uin = date('Y-m-d H:i:s');
-        } elseif ($this->new_password) {
+            return true;
+        }
+        if ($this->requestedNewPassword == 1) {
+            $e_flag = 0;
             if ($this->password_uin != self::passwordHash($this->old_password)) {
                 $this->addError('old_password', 'Old password is wrong!');
-            } else {
-                $this->password_uin = self::passwordHash($this->new_password);
+                $e_flag = 1;
             }
+            if ($this->new_password == '') {
+                $this->addError('new_password', 'Enter the new password!');
+                $e_flag = 1;
+            }
+            if ($this->confirm_new_password == '') {
+                $this->addError('confirm_new_password', 'Enter the new password confirmation!');
+                $e_flag = 1;
+            }
+            if ($e_flag)
+                return false;
+            $this->password_uin = self::passwordHash($this->new_password);
         }
         return true;
     }
@@ -150,7 +166,6 @@ Virex Team";
         // should not be searched.
 
         $criteria = new CDbCriteria;
-        $criteria->with = array('admin');
         $criteria->compare('id_uin', $this->id_uin, true);
         $criteria->compare('fname_uin', $this->fname_uin, true);
         $criteria->compare('lname_uin', $this->lname_uin, true);

@@ -1,4 +1,3 @@
-
 <div class="form wide">
     <?php
     $form = $this->beginWidget('CActiveForm', array(
@@ -36,12 +35,14 @@
         </div>
     </fieldset>
     <?php if ((!$model->isNewRecord) && ($model->id_uin == Yii::app()->user->userId)) { ?>
-        <fieldset style="text-align:center;"><legend onclick="$('#change_old_password').toggle('fast');$('#link_change_password').toggle('fast');" style="cursor:pointer;">Change password</legend>
-            <a id="link_change_password" onclick="$('#change_old_password').toggle('fast');$(this).toggle('fast');" style="cursor:pointer;">Change password</a>
+        <?php echo CHtml::hiddenField('password_change_request', '0'); ?>
+
+        <fieldset style="text-align:center;"><legend onclick="$('#change_old_password').toggle('fast');$('#link_change_password').toggle('fast');if ($('#password_change_request').val()==1){$('#password_change_request').val(0)} else {$('#password_change_request').val(1);}" style="cursor:pointer;">Change password</legend>
+            <a id="link_change_password" onclick="$('#change_old_password').toggle('fast');$(this).toggle('fast');if ($('#password_change_request').val()==1){$('#password_change_request').val(0)} else {$('#password_change_request').val(1);}" style="cursor:pointer;">Change password</a>
             <div id="change_old_password" style="display:none;min-width:550px;text-align:left;">
                 <div class="row">
                     <?php echo $form->labelEx($model, 'old_password'); ?>
-                    <?php echo $form->passwordField($model, 'old_password', array('style' => 'width:350px;', 'value' => '', 'autocomplete' => 'off')); ?>
+                    <?php echo $form->passwordField($model, 'old_password', array('style' => 'width:350px;', 'autocomplete' => 'off')); ?>
                     <?php echo $form->error($model, 'old_password'); ?>
                 </div>
                 <div class="row">
@@ -56,6 +57,16 @@
                 </div>
             </div>
         </fieldset>
+        <?php
+        if ($model->hasErrors('old_password') || $model->hasErrors('new_password') || $model->hasErrors('confirm_new_password')) {
+            echo '
+            <script type="text/javascript">
+                $("#link_change_password").hide();
+                $("#change_old_password").show();
+                $("#password_change_request").val(1);
+            </script>';
+        }
+        ?>
     <?php } ?>
     <fieldset><legend>Notifications</legend>
         <div class="row">

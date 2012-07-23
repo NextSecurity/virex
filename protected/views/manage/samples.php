@@ -17,7 +17,10 @@
             'name' => 'interval_start',
             'value' => isset($_SESSION['interval_start']) ? $_SESSION['interval_start'] : date('Y-m-d', strtotime('- 7 day')),
             'options' => array(
-                'dateFormat' => 'yy-mm-dd'
+                'dateFormat' => 'yy-mm-dd',
+                'onSelect' => 'js:function(selectedDate) {
+                                $("#interval_end").datepicker("option", "minDate", selectedDate);                  
+                            }',
             ),
             'htmlOptions' => array('size' => 30, 'class' => 'date', 'style' => 'width:70px;margin:auto;float:none;', 'autocomplete' => 'off'),
                 ), true
@@ -28,7 +31,10 @@
             'name' => 'interval_end',
             'value' => isset($_SESSION['interval_end']) ? $_SESSION['interval_end'] : date('Y-m-d'),
             'options' => array(
-                'dateFormat' => 'yy-mm-dd'
+                'dateFormat' => 'yy-mm-dd',
+                'onSelect' => 'js:function(selectedDate) {
+                                $("#interval_start").datepicker("option", "maxDate", selectedDate);                  
+                            }',
             ),
             'htmlOptions' => array('size' => 30, 'class' => 'date', 'style' => 'width:70px;margin:auto;float:none;', 'autocomplete' => 'off'),
                 ), true

@@ -16,7 +16,7 @@ class InternalUserController extends Controller {
 
         if (isset($_POST['InternalUser'])) {
             $model->attributes = $_POST['InternalUser'];
-            if ($model->save(false)) {
+            if ($model->save()) {
 //                Yii::app()->user->setFlash('_success', "Internal user account has been created!");
                 $this->redirect(array('internaluser/admin'));
             }
@@ -39,8 +39,12 @@ class InternalUserController extends Controller {
 
         if (isset($_POST['InternalUser'])) {
             $model->attributes = $_POST['InternalUser'];
-            Yii::app()->user->setFlash('_success', "The account has been successfully updated!");
-            $model->save();
+            if (isset($_POST['password_change_request']) && $_POST['password_change_request'] == '1') {
+                $model->requestedNewPassword = 1;
+            }
+            if ($model->save()) {
+                Yii::app()->user->setFlash('_success', "The account has been successfully updated!");
+            }
         }
         $this->headlineText = 'Update user';
         $this->render('_form', array(
