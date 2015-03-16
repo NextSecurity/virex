@@ -1,5 +1,4 @@
 # virex
-Virex
 
 What is Virex?
 
