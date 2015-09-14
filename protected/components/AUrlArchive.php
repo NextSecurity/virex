@@ -16,7 +16,7 @@ class AUrlArchive {
         $this->unpacker->max_files = 10;
         $this->unpacker->r_levels = 1;
         $this->unpacker->outputDir = PathFinder::ensure(VIREX_TEMP_PATH . DIRECTORY_SEPARATOR . 'urls');
-        $this->baseUrl = PathFinder::get(VIREX_INCOMING_PATH, $detection, 'urls');
+		$this->baseUrl = PathFinder::get(VIREX_INCOMING_PATH, $detection, 'urls') . '/';
     }
 
     public function valid_url($url) {
@@ -118,7 +118,7 @@ class AUrlArchive {
 
     private function move_to_bogus($file) {
         $error_message = $this->last_error;
-        $bogusFolder = VIREX_INCOMING_DETECTED . 'bogus';
+		$bogusFolder = VIREX_INCOMING_PATH . '/bogus';
         if (!$this->saveToBogusCommand) {
             $this->saveToBogusCommand = Yii::app()->db->createCommand("INSERT INTO bogus_archives_bga (name_bga, type_bga,	date_add_bga, error_message_bga) VALUES (:name, :type, CURDATE(), :error)");
         }

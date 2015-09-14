@@ -121,7 +121,7 @@ OPTIONS:
         foreach ($tees as $tee) {
             foreach ($dees as $dee) {
                 if ($tee == 'url') {
-                    $files = $urchiver->return_all();
+                    $urchiver->add_new();
                 }
                 if (in_array($tee, array('daily', 'monthly'))) {
                     $files = $archiver->process_archives($dee, $tee);

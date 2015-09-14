@@ -299,6 +299,37 @@ class SampleShareObject {
             die("Error! max blocksize not set");
     }
 
+	public function get_urls(){
+		$this->check_vars_list();
+
+		$plaintext = "urlslist.txt";
+		$encrypted = $plaintext . ".gpg";
+
+		if (file_exists($plaintext))
+		unlink($plaintext);
+		if (file_exists($encrypted))
+		unlink($encrypted);
+
+		$this->curl_download("?action=geturls&user=$this->http_user&from=$this->from_date_utc&to=$this->to_date_utc");
+
+		$fout = fopen($encrypted, "w");
+		if (!$fout)
+		die("Unable to create $encrypted!");
+
+		fputs($fout, $this->curl_output);
+		fclose($fout);
+
+		$this->decrypt($encrypted, $plaintext);
+		$contents = file_get_contents($plaintext);
+
+        if ($contents == "") {
+            echo "No new URLs found\r\n";
+            return 0;
+        }
+        
+        return explode("\n", trim($contents));
+    }
+	
     public function get_file($md5) {
         $this->check_vars_file();
         if ($md5 == "")

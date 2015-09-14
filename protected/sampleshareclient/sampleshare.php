@@ -92,4 +92,14 @@ if ($share->get_list()) {
       }
       $share->print_avg_speed(); */
 }
+
+echo "Requesting URLs list..";
+if ($urls = $share->get_urls()){
+echo "Found " . count($urls) . " URLs!\n";
+echo implode("\n", $urls) . "\n";
+} else {
+echo "No URLs found!";
+}
+
+
 ?>
