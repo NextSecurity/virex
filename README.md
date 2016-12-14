@@ -1,5 +1,7 @@
 # virex
 
+Please use: https://github.com/avira/virex to get the latest sources & release! 
+
 What is Virex?
 
 Virex is a web based application developed by the Avira Operations GmbH & Co. KG and is published to the community under the New BDS License. The application is based on the Norman Sample Sharing framework and is able to organize your malicious samples, clean samples and URLs. Virex offers various statistics as example the amount of downloaded samples by a sharing partner, the amount of newly added samples by the owner of the system as well as statistics about file size and traffic.
